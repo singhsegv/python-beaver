@@ -16,7 +16,7 @@ class RedisclusterTransport(BaseTransport):
         self._cluster_host = beaver_config.get('redis_cluster_host')
         self._cluster_port = beaver_config.get('redis_cluster_port')
 
-        self._cluster = RedisCluster(host=self._cluster_host, port=self._cluster_port, decode_responses=True)
+        self._cluster = RedisCluster(startup_nodes=[{"host": self._cluster_host, "port": self._cluster_port}], decode_responses=True, skip_full_coverage_check=True)
 
         self._namespace = beaver_config.get('redis_namespace')
 
@@ -38,7 +38,7 @@ class RedisclusterTransport(BaseTransport):
 
     def reconnect(self):
         if self._is_reachable():
-            self._cluster = RedisCluster(host=self._cluster_host, port=self._cluster_port, decode_responses=True)
+            self._cluster = RedisCluster(startup_nodes=[{"host": self._cluster_host, "port": self._cluster_port}], decode_responses=True, skip_full_coverage_check=True)
 
     def invalidate(self):
         """Invalidates the current transport and disconnects all redis cluster connection"""
